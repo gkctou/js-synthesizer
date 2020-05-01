@@ -1,6 +1,6 @@
-Fork and merge FluidSynth wasm and Main class into single bundle js.
-==========
+## Fork and merge FluidSynth wasm and Main class into single bundle js.
 
+<hr />
 js-synthesizer
 ==========
 
