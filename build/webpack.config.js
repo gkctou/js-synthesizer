@@ -1,4 +1,3 @@
-
 const fs = require('fs');
 const path = require('path');
 
@@ -15,7 +14,8 @@ const AUTHOR = packageJson.author;
 const isMinified = process.env.NODE_ENV === 'minified';
 const suffix = isMinified ? '.min' : '';
 
-const headerTextTemplate = fs.readFileSync(path.resolve(__dirname, '../src/banner/header.txt'), 'utf8');
+// const headerTextTemplate = fs.readFileSync(path.resolve(__dirname, '../src/banner/header.txt'), 'utf8');
+const headerTextTemplate = fs.readFileSync(path.resolve(__dirname, '../externals/libfluidsynth-2.0.2.js'), 'utf8');
 const preparedHeaderText = prependHeaderTextImpl(
 	LIBRARY_NAME, AUTHOR, LIBRARY_VERSION
 );
@@ -41,7 +41,7 @@ const webpackConfBase = {
 	},
 	plugins: [
 		new webpack.BannerPlugin({
-			banner: preparedHeaderText,
+			banner: headerTextTemplate.replace(/\[name\]/g, "[ name ]"),
 			raw: true
 		})
 	],
@@ -92,17 +92,18 @@ function toNumberStringWithZero(num, length) {
 }
 
 function prependHeaderTextImpl(name, author, version) {
-	var date = new Date();
-	var s;
-	return headerTextTemplate
-		.replace('[name]', name)
-		.replace('[author]', author)
-		.replace('[version]', version || '')
-		.replace('[year4]', toNumberStringWithZero(date.getFullYear(), 4))
-		.replace(
-			'[date]',
-			toNumberStringWithZero(date.getFullYear(), 4) + '-' +
-			toNumberStringWithZero(date.getMonth() + 1, 2) + '-' +
-			toNumberStringWithZero(date.getDate(), 2)
-		);
+	return headerTextTemplate;
+	// var date = new Date();
+	// var s;
+	// return headerTextTemplate
+	// 	.replace('[name]', name)
+	// 	.replace('[author]', author)
+	// 	.replace('[version]', version || '')
+	// 	.replace('[year4]', toNumberStringWithZero(date.getFullYear(), 4))
+	// 	.replace(
+	// 		'[date]',
+	// 		toNumberStringWithZero(date.getFullYear(), 4) + '-' +
+	// 		toNumberStringWithZero(date.getMonth() + 1, 2) + '-' +
+	// 		toNumberStringWithZero(date.getDate(), 2)
+	// 	);
 }

@@ -1,4 +1,5 @@
-[![NPM version](https://badge.fury.io/js/js-synthesizer.svg)](https://www.npmjs.com/package/js-synthesizer)
+Fork and merge FluidSynth wasm and Main class into single bundle js.
+==========
 
 js-synthesizer
 ==========
