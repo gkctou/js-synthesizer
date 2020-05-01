@@ -1,6 +1,9 @@
 ## Fork and merge FluidSynth wasm and Main class into single bundle js.
 
-<hr />
+#### install this merge version with
+
+npm install @gkctou/js-synthesizer --registry=https://npm.pkg.github.com 
+#
 js-synthesizer
 ==========
 
