@@ -1,5 +1,5 @@
 {
-  "author": "jet",
+  "author": "gkctou",
   "betterScripts": {
     "build:lib:dev": {
       "command": "webpack --config ./build/webpack.config.js"
@@ -24,7 +24,7 @@
     "node": "8",
     "npm": ">=6"
   },
-  "homepage": "https://github.com/jet2jet/js-synthesizer",
+  "homepage": "https://github.com/gkctou/js-synthesizer",
   "keywords": [
     "javascript",
     "synthesizer",
@@ -39,10 +39,10 @@
   "license": "BSD-3-Clause",
   "main": "./dist/js-synthesizer.js",
   "module": "./dist/lib/index.js",
-  "name": "js-synthesizer",
+  "name": "@gkctou/js-synthesizer",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jet2jet/js-synthesizer.git"
+    "url": "https://github.com/gkctou/js-synthesizer"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:lib:dev",
@@ -52,5 +52,8 @@
     "build:ts": "tsc -p tsconfig.json"
   },
   "types": "./dist/lib/index.d.ts",
-  "version": "1.5.2"
+  "version": "1.0.1",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
 }
