@@ -13,7 +13,7 @@ interface AudioWorkletNodeOptions extends AudioNodeOptions {
 	processorOptions?: any;
 }
 
-abstract class AudioWorkletProcessor {
+declare abstract class AudioWorkletProcessor {
 	public port: MessagePort;
 
 	constructor(options: AudioWorkletNodeOptions);

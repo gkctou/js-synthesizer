@@ -1,4 +1,4 @@
-
+/// <reference path="../../typings/AudioWorklet.d.ts" />
 import SequencerEvent, { EventType } from './SequencerEvent';
 
 /** @internal */
@@ -6,6 +6,7 @@ import PointerType, { INVALID_POINTER } from './PointerType';
 /** @internal */
 import SequencerEventData from './SequencerEventData';
 
+import { Module } from '../../externals/libfluidsynth';
 const _module: any = typeof AudioWorkletGlobalScope !== 'undefined' ?
 	AudioWorkletGlobalScope.wasmModule : Module;
 

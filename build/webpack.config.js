@@ -15,14 +15,14 @@ const isMinified = process.env.NODE_ENV === 'minified';
 const suffix = isMinified ? '.min' : '';
 
 // const headerTextTemplate = fs.readFileSync(path.resolve(__dirname, '../src/banner/header.txt'), 'utf8');
-const headerTextTemplate = fs.readFileSync(path.resolve(__dirname, '../externals/libfluidsynth-2.0.2.js'), 'utf8');
-const preparedHeaderText = prependHeaderTextImpl(
-	LIBRARY_NAME, AUTHOR, LIBRARY_VERSION
-);
+// const headerTextTemplate = fs.readFileSync(path.resolve(__dirname, '../externals/libfluidsynth-2.0.2.js'), 'utf8');
+// const preparedHeaderText = prependHeaderTextImpl(
+// 	LIBRARY_NAME, AUTHOR, LIBRARY_VERSION
+// );
 
 const webpackConfBase = {
 	mode: isMinified ? 'production' : 'development',
-	devtool: 'source-map',
+	devtool: isMinified ? undefined :'source-map',
 	module: {
 		rules: [
 			{
@@ -40,14 +40,17 @@ const webpackConfBase = {
 		namedModules: false
 	},
 	plugins: [
-		new webpack.BannerPlugin({
-			banner: headerTextTemplate.replace(/\[name\]/g, "[ name ]"),
-			raw: true
-		})
+		// new webpack.BannerPlugin({
+		// 	banner: headerTextTemplate.replace(/\[name\]/g, "[ name ]"),
+		// 	raw: true
+		// })
 	],
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js']
-	}
+	},
+    node: {
+        fs: 'empty'
+    }
 };
 
 module.exports = [

@@ -6,6 +6,9 @@ import SynthesizerSettings from './SynthesizerSettings';
  * Abstract synthesizer object.
  */
 export default interface ISynthesizer {
+	getSFonts(): Promise<{ id: number, name: string, stackIndex: number, bankOffset: number }[]>;
+	getPresets(sfontId: number): Promise<{ bank: number, preset: number, name?: string }[]>;
+
 	/// --- Basic or configuration methods ---
 
 	/** Return whether the instance (synthesizer) is initialized. */

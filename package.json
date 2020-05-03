@@ -14,7 +14,10 @@
   "dependencies": {},
   "description": "Synthesizer library for web-based JS program, using with Web Audio or etc.",
   "devDependencies": {
+    "@types/node": "^13.13.4",
     "better-npm-run": "^0.1.1",
+    "midifile-ts": "^1.1.2",
+    "speaker": "^0.5.1",
     "ts-loader": "^6.2.1",
     "typescript": "3.1.4",
     "webpack": "4.41.5",
@@ -45,7 +48,7 @@
     "url": "https://github.com/gkctou/js-synthesizer"
   },
   "scripts": {
-    "build": "npm run build:ts && npm run build:lib:dev",
+    "build": "npm run build:ts && npm run build:lib:dev && npm run build:lib:minified",
     "build:lib:dev": "better-npm-run build:lib:dev",
     "build:lib:minified": "better-npm-run build:lib:minified",
     "build:minified": "npm run build:ts && npm run build:lib:minified",

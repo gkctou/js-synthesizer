@@ -3,12 +3,12 @@
     "baseUrl": "./src/main",
     "declaration": true,
     "declarationDir": "./dist/lib",
-    "lib": [ "es5", "es2015", "dom", "dom.iterable" ],
-    "module": "es2015",
+    "lib": ["es5", "es2015", "dom", "dom.iterable"],
+    "module": "CommonJS",
     "moduleResolution": "node",
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "outDir": "./dist/lib",
     "paths": {
       "*": [
@@ -24,7 +24,10 @@
     "target": "es2015",
     "typeRoots": [
       "../../typings/*"
-    ]
+    ],
+    // "allowJs": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false
   },
   "include": [
     "./src/main/**/*.ts",

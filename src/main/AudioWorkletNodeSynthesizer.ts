@@ -21,6 +21,12 @@ export interface SynthesizerStatus {
 
 /** An synthesizer object with AudioWorkletNode */
 export default class AudioWorkletNodeSynthesizer implements ISynthesizer {
+	public getSFonts(): Promise<{ id: number, name: string, stackIndex: number, bankOffset: number }[]> {
+		return MethodMessaging.postCallWithPromise<{ id: number, name: string, stackIndex: number, bankOffset: number }[]>(this._messaging!, 'getSFonts', []);
+	}
+	public getPresets(sfontId: number): Promise<{ bank: number, preset: number, name?: string }[]> {
+		return MethodMessaging.postCallWithPromise<{ bank: number, preset: number, name?: string }[]>(this._messaging!, 'getPresets', [sfontId]);
+	}
 
 	/** @internal */
 	private _status: SynthesizerStatus;

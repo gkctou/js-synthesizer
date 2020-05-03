@@ -1,8 +1,9 @@
 
 /** @internal */
-declare global {
-	var Module: any;
-}
+// declare global {
+// 	var Module: any;
+// }
+import { Module } from '../../externals/libfluidsynth';
 
 let promiseWasmInitialized: Promise<void> | undefined;
 

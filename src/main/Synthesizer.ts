@@ -20,11 +20,12 @@ import SequencerEvent, { EventType as SequencerEventType } from './SequencerEven
 import SequencerEventData from './SequencerEventData';
 
 /** @internal */
-declare global {
-	var Module: any;
-	function addFunction(func: Function, sig: string): number;
-	function removeFunction(funcPtr: number): void;
-}
+// declare global {
+// 	var Module: any;
+// 	function addFunction(func: Function, sig: string): number;
+// 	function removeFunction(funcPtr: number): void;
+// }
+import { Module, addFunction, removeFunction, Pointer_stringify } from '../../externals/libfluidsynth';
 
 type SettingsId = UniquePointerType<'settings_id'>;
 type SynthId = UniquePointerType<'synth_id'>;
@@ -49,7 +50,7 @@ let free: (ptr: PointerType) => void;
 let defaultMIDIEventCallback: (data: PointerType, event: MIDIEventType) => number;
 
 function bindFunctions() {
-	if (fluid_synth_error) {
+	if (!!fluid_synth_error) {
 		// (already bound)
 		return;
 	}
@@ -148,6 +149,48 @@ function makeMIDIEventCallback(synth: Synthesizer, cb: HookMIDIEventCallback, pa
 
 /** Default implementation of ISynthesizer */
 export default class Synthesizer implements ISynthesizer {
+	public getSFonts(): Promise<{
+		id: number,
+		name: string,
+		stackIndex: number,
+		bankOffset: number
+	}[]> {
+		this.ensureInitialized();
+		let sfCnt: number = _module._fluid_synth_sfcount(this._synth);
+		let sfs = [];
+		for (let i = 0; i < sfCnt; i++) {
+			const sfT = _module._fluid_synth_get_sfont(this._synth, i);
+			if (!sfT) continue;
+			const id = _module._fluid_sfont_get_id(sfT);
+			if (!id) continue;
+			sfs.push({
+				id,
+				name: Pointer_stringify(_module._fluid_sfont_get_name(sfT)),
+				stackIndex: i,
+				// https://fluid-dev.nongnu.narkive.com/Fv2kQsxA/new-bank-offset-feature-and-selecting-sfont-bank-preset
+				bankOffset: _module._fluid_synth_get_bank_offset(this._synth, id)
+			});
+		}
+		return Promise.resolve(sfs.sort((a, b) => a.id - b.id));
+	}
+	public getPresets(sfontId: number): Promise<{ bank: number, preset: number, name?: string }[]> {
+		this.ensureInitialized();
+		let sfT = _module._fluid_synth_get_sfont_by_id(this._synth, sfontId);
+		// console.log(`sfont name: ${Pointer_stringify(_module._fluid_sfont_get_name(sfT))}`);
+		_module._fluid_sfont_iteration_start(sfT);
+		let preT = _module._fluid_sfont_iteration_next(sfT);
+		let ar = [];
+		while (preT > 0) {
+			ar.push({
+				bank: _module._fluid_preset_get_banknum(preT),
+				preset: _module._fluid_preset_get_num(preT),
+				name: Pointer_stringify(_module._fluid_preset_get_name(preT))
+			});
+			preT = _module._fluid_sfont_iteration_next(sfT);
+		}
+		return Promise.resolve(ar);
+	}
+
 	/** @internal */
 	private _settings: SettingsId;
 	/** @internal */
@@ -302,10 +345,10 @@ export default class Synthesizer implements ISynthesizer {
 		return this.flushFramesAsync();
 	}
 
-	public loadSFont(bin: ArrayBuffer) {
+	public loadSFont(bin: ArrayBuffer, sfontName?: string) {
 		this.ensureInitialized();
 
-		const name = makeRandomFileName('sfont', '.sf2');
+		const name = sfontName || makeRandomFileName('sfont', '.sf2');
 		const ub = new Uint8Array(bin);
 
 		_fs.writeFile(name, ub);
@@ -341,7 +384,7 @@ export default class Synthesizer implements ISynthesizer {
 		this.ensureInitialized();
 		_module._fluid_synth_set_bank_offset(this._synth, id, offset);
 	}
-	
+
 	public render(outBuffer: AudioBuffer | Float32Array[]) {
 		const frameCount = 'numberOfChannels' in outBuffer ? outBuffer.length : outBuffer[0].length;
 		const channels = 'numberOfChannels' in outBuffer ? outBuffer.numberOfChannels : outBuffer.length;
@@ -369,10 +412,10 @@ export default class Synthesizer implements ISynthesizer {
 				}
 			} else { // copyToChannel API not exist in Safari AudioBuffer
 				const leftData = outBuffer.getChannelData(0);
-				aLeft.forEach((val, i)=> leftData[i] = val);
+				aLeft.forEach((val, i) => leftData[i] = val);
 				if (aRight) {
 					const rightData = outBuffer.getChannelData(1);
-					aRight.forEach((val, i)=> rightData[i] = val);
+					aRight.forEach((val, i) => rightData[i] = val);
 				}
 			}
 		} else {

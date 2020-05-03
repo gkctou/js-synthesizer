@@ -12,10 +12,11 @@ type SequencerPointer = UniquePointerType<'sequencer_ptr'>;
 type SequencerId = number;
 
 /** @internal */
-declare global {
-	var Module: any;
-	function removeFunction(funcPtr: number): void;
-}
+// declare global {
+// 	var Module: any;
+// 	function removeFunction(funcPtr: number): void;
+// }
+import { Module, removeFunction } from '../../externals/libfluidsynth';
 
 let _module: any;
 let _removeFunction: (funcPtr: number) => void;
